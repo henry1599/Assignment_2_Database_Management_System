@@ -1,6 +1,6 @@
 CREATE DATABASE BUS_SYSTEM;
 USE BUS_SYSTEM;
--- DROP DATABASE BUS_SYSTEM;
+
 -- Employee table
 CREATE TABLE EMPLOYEE
 (
@@ -14,10 +14,9 @@ CREATE TABLE EMPLOYEE
     data_of_birth DATE,
     email VARCHAR(100),
     -- Male, Female or Unidentified (M, F, U)
-    sex CHAR
+    sex CHAR CHECK (sex = 'M' OR sex = 'F' OR sex = 'U')
 );
 
-SELECT * FROM EMPLOYEE;
 -- Employee phonenumber table
 CREATE TABLE EMPLOYEE_PHONENUMBER
 (
@@ -33,7 +32,6 @@ CREATE TABLE EMPLOYEE_PHONENUMBER
 CREATE TABLE EMPLOYEE_ADDRESS
 (
 	employee_id VARCHAR(8),
-    -- địa chỉ ( 268 Lý Thường Kiệt, Phường 14, Quận 10, Thành phố Hồ Chí Minh )
     address VARCHAR(100),
     CONSTRAINT pk_employee_address_table PRIMARY KEY (employee_id, address),
     FOREIGN KEY (employee_id) REFERENCES EMPLOYEE(employee_id)
@@ -45,7 +43,6 @@ CREATE TABLE EMPLOYEE_ADDRESS
 CREATE TABLE OPERATING_STAFF
 (
 	staff_id VARCHAR(8) PRIMARY KEY,
-    -- Tính bằng đơn vị WPM - Words per minute 
     typing_speed INT,
     FOREIGN KEY (staff_id) REFERENCES EMPLOYEE(employee_id)
     ON DELETE CASCADE
@@ -56,7 +53,6 @@ CREATE TABLE OPERATING_STAFF
 CREATE TABLE OPERATING_STAFF_DEGREE
 (
 	staff_id VARCHAR(8),
-    -- Bằng cấp có thể là tên trường hoặc tên bằng (cấp 1, cấp 2, đại học, harvard,...)
     degree VARCHAR(100),
     CONSTRAINT pk_operating_staff_degree_table PRIMARY KEY (staff_id, degree),
     FOREIGN KEY (staff_id) REFERENCES EMPLOYEE(employee_id)
@@ -90,16 +86,13 @@ CREATE TABLE STATION
 	station_id VARCHAR(4) PRIMARY KEY,
     station_name VARCHAR(100),
     address VARCHAR(100),
-    -- Theo đơn vị số xe bus
     storage INT
 );
+
 -- Bus route table
 CREATE TABLE BUS_ROUTE
 (
 	route_id VARCHAR(2) PRIMARY KEY,
-    -- Nội thành hoặc liên tỉnh
-    -- N : nội thành
-    -- L : liên tỉnh
     type_route CHAR,
     number_of_busstop INT,
     number_of_trip INT,
@@ -119,11 +112,11 @@ CREATE TABLE TOUR
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
+
 -- Bus table
 CREATE TABLE BUS
 (
 	license_plate_no VARCHAR(10) PRIMARY KEY,
-    -- Xe lớn, vừa hoặc nhỏ (L, V, N)
     type_of_bus CHAR,
     number_of_seats INT
 );
@@ -184,7 +177,7 @@ CREATE TABLE TICKET
     -- M : member card
     -- N : non-member card
     -- T : monthly payment
-    type_ticket CHAR,
+    type_ticket CHAR CHECK (type_ticket = 'M' OR type_ticket = 'N' OR type_ticket = 'T'),
     price INT,
     payment_id VARCHAR(11) PRIMARY KEY,
     route_id VARCHAR(2),
@@ -193,12 +186,12 @@ CREATE TABLE TICKET
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
+
 -- Member card table
 CREATE TABLE MEMBER_CARD
 (
 	payment_id VARCHAR(11),
     card_id VARCHAR(9),
-    -- tiền còn lại trong tài khoản
     extant INT,
     CONSTRAINT pk_member_card PRIMARY KEY (payment_id, card_id),
     FOREIGN KEY (payment_id) REFERENCES TICKET(payment_id)
@@ -253,8 +246,6 @@ CREATE TABLE DEPENDENT_PHONE_NUMBER
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
-
-
 
 -- Driver table
 CREATE TABLE DRIVER
@@ -363,15 +354,3 @@ CREATE TABLE STATION_IN_ROUTE
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
-
-select * from EMPLOYEE
-
-INSERT INTO EMPLOYEE VALUES('ATATATAT','AAAA','aaaa',20,'2020-12-20',10000,20000,'2001-02-11','example@gmail.com','F');
-INSERT INTO EMPLOYEE VALUES('BTBTBTBT','BBBB','bbbb',21,'2020-12-21',10001,20001,'2001-02-12','example1@gmail.com','F');
-INSERT INTO EMPLOYEE VALUES('CTCTCTCT','CCCC','cccc',22,'2020-12-22',10002,20002,'2001-02-13','example2@gmail.com','F');
-INSERT INTO EMPLOYEE VALUES('DTDTDTDT','DDDD','dddd',23,'2020-12-23',10003,20003,'2001-02-14','example3@gmail.com','F');
-INSERT INTO EMPLOYEE VALUES('ETETETET','EEEE','eeee',24,'2020-12-24',10004,20004,'2001-02-15','example4@gmail.com','F');
-INSERT INTO EMPLOYEE VALUES('FTFTFTFT','FFFF','ffff',25,'2020-12-25',10005,20005,'2001-02-16','example5@gmail.com','F');
-INSERT INTO EMPLOYEE VALUES('GTGTGTGT','GGGG','gggg',26,'2020-12-26',10006,20006,'2001-02-17','example6@gmail.com','F');
-DELETE FROM EMPLOYEE WHERE employee_id = 'ATATATAT' AND first_name = 'AAAA';
-	
